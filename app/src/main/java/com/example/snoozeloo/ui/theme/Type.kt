@@ -2,33 +2,70 @@ package com.example.snoozeloo.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
+import com.example.snoozeloo.R
 
 // Set of Material typography styles to start with
+
+val MontSerrat = FontFamily(
+    Font(
+        resId = R.font.montserrat_light,
+        weight = FontWeight.Light
+    ),
+
+    Font(
+        resId = R.font.montserrat_regular,
+        weight = FontWeight.Normal
+    ),
+
+    Font(
+        resId = R.font.montserrat_medium,
+        weight = FontWeight.Medium
+    ),
+
+    Font(
+        resId = R.font.montserrat_semibold,
+        weight = FontWeight.SemiBold
+    ),
+
+    Font(
+        resId = R.font.montserrat_bold,
+        weight = FontWeight.Bold
+    ),
+)
+
 val Typography = Typography(
-    bodyLarge = TextStyle(
-        fontFamily = FontFamily.Default,
+
+    bodySmall = TextStyle(
+        fontFamily = MontSerrat,
         fontWeight = FontWeight.Normal,
         fontSize = 16.sp,
-        lineHeight = 24.sp,
-        letterSpacing = 0.5.sp
-    )
-    /* Other default text styles to override
-    titleLarge = TextStyle(
-        fontFamily = FontFamily.Default,
-        fontWeight = FontWeight.Normal,
-        fontSize = 22.sp,
-        lineHeight = 28.sp,
-        letterSpacing = 0.sp
+        lineHeight = 19.5.sp
     ),
-    labelSmall = TextStyle(
-        fontFamily = FontFamily.Default,
-        fontWeight = FontWeight.Medium,
-        fontSize = 11.sp,
-        lineHeight = 16.sp,
-        letterSpacing = 0.5.sp
+
+    bodyMedium = TextStyle(
+        fontFamily = MontSerrat,
+        fontWeight = FontWeight.Normal,
+        fontSize = 24.sp,
+        lineHeight = 29.26.sp
+    ),
+
+
+    bodyLarge = TextStyle(
+        fontFamily = MontSerrat,
+        fontWeight = FontWeight.Normal,
+        fontSize = 42.sp,
+        lineHeight = 51.2.sp,
+    ),
+
+    labelLarge = TextStyle(
+        fontFamily = MontSerrat,
+        fontWeight = FontWeight.Normal,
+        fontSize = 52.sp,
+        lineHeight = 63.5.sp
     )
-    */
+
 )
