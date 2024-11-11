@@ -55,6 +55,7 @@ dependencies {
     implementation(libs.navigation.compose)
     implementation(libs.room.runtime)
     implementation(libs.room.ktx)
+    implementation(libs.androidx.core.splashscreen)
 
     ksp(libs.hilt.android.compiler)
     ksp(libs.room.compiler)
