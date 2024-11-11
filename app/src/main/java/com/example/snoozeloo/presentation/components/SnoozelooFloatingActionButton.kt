@@ -1,4 +1,4 @@
-package com.example.snoozeloo.components
+package com.example.snoozeloo.presentation.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
