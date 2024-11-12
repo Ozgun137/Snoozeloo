@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Snoozeloo</string>
     <string name="your_alarms">Your Alarms</string>
+    <string name="create_alarm">Create alarm</string>
 </resources>
