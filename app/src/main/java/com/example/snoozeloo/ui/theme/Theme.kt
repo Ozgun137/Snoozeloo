@@ -16,7 +16,7 @@ private val LightColorScheme = lightColorScheme(
     tertiary = SnoozelooWhite,
     background = SnoozelooWhite,
     onBackground = SnoozelooBlack,
-    onSurfaceVariant = SnoozelooBlack,
+    onSurfaceVariant = SnoozelooGray,
     surface = SnoozelooWhite
 
     /* Other default colors to override

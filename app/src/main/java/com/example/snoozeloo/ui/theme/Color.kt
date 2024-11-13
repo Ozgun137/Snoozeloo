@@ -14,4 +14,5 @@ val SnoozelooBlue = Color(0xFF4664FF)
 val SnoozelooWhite = Color(0XFFF6F6F6)
 val SnoozelooBlack = Color(0XFF0D0F19)
 val SnoozelooGray = Color(0XFF858585)
+val SnoozelooOpenBlue = Color(0xFFBCC6FF)
 

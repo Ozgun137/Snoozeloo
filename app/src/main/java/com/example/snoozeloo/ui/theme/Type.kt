@@ -43,14 +43,14 @@ val Typography = Typography(
 
     bodySmall = TextStyle(
         fontFamily = MontSerrat,
-        fontWeight = FontWeight.Normal,
+        fontWeight = FontWeight.Medium,
         fontSize = 16.sp,
         lineHeight = 19.5.sp
     ),
 
     bodyMedium = TextStyle(
         fontFamily = MontSerrat,
-        fontWeight = FontWeight.Normal,
+        fontWeight = FontWeight.Medium,
         fontSize = 24.sp,
         lineHeight = 29.26.sp
     ),
@@ -58,14 +58,14 @@ val Typography = Typography(
 
     bodyLarge = TextStyle(
         fontFamily = MontSerrat,
-        fontWeight = FontWeight.Normal,
+        fontWeight = FontWeight.Medium,
         fontSize = 42.sp,
         lineHeight = 51.2.sp,
     ),
 
     labelLarge = TextStyle(
         fontFamily = MontSerrat,
-        fontWeight = FontWeight.Normal,
+        fontWeight = FontWeight.Medium,
         fontSize = 52.sp,
         lineHeight = 63.5.sp
     )
