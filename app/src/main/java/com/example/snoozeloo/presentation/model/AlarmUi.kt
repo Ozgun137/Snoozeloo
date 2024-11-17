@@ -4,5 +4,6 @@ data class AlarmUi(
     val id: Int,
     val name: String,
     val alarmTime: String,
-    val isEnabled: Boolean = false
+    val isEnabled: Boolean = false,
+    val areOptionsRevealed: Boolean = false
 )

@@ -38,6 +38,41 @@ class AlarmListViewModel @Inject constructor (
                 }
             }
 
+            is AlarmListAction.OnAlarmViewSwiped -> {
+                _alarmListState.update { alarmState->
+                    alarmState.copy(
+                        alarms = alarmState.alarms.map { alarmUi ->
+                            if(alarmUi.id == action.alarmID) {
+                                alarmUi.copy(areOptionsRevealed = true)
+                            } else alarmUi
+                        }
+                    )
+                }
+            }
+
+            is AlarmListAction.OnAlarmViewCollapsed -> {
+                _alarmListState.update { alarmState->
+                    alarmState.copy(
+                        alarms = alarmState.alarms.map { alarmUi ->
+                            if(alarmUi.id == action.alarmID) {
+                                alarmUi.copy(areOptionsRevealed = false)
+                            } else alarmUi
+                        }
+                    )
+                }
+            }
+
+            is AlarmListAction.OnAlarmDeleted -> {
+                val newAlarms = alarmListState.value.alarms.toMutableList()
+                newAlarms.removeIf { it.id == action.alarmID }
+
+                _alarmListState.update { alarmState->
+                    alarmState.copy(
+                        alarms = newAlarms
+                    )
+                }
+            }
+
             AlarmListAction.OnAlarmClicked -> {}
             AlarmListAction.OnCreateAlarmButtonClicked -> {}
         }

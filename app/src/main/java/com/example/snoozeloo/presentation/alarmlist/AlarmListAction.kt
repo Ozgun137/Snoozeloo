@@ -7,5 +7,18 @@ sealed interface AlarmListAction {
     ) : AlarmListAction
 
     data object OnAlarmClicked : AlarmListAction
+
     data object OnCreateAlarmButtonClicked : AlarmListAction
+
+    data class OnAlarmViewSwiped (
+        val alarmID: Int
+    ): AlarmListAction
+
+    data class OnAlarmViewCollapsed(
+        val alarmID: Int
+    ) : AlarmListAction
+
+    data class OnAlarmDeleted(
+        val alarmID: Int
+    ): AlarmListAction
 }
