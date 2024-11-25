@@ -7,3 +7,5 @@ import com.example.snoozeloo.presentation.model.AlarmUi
 data class AlarmListState(
     val alarms: List<AlarmUi> = emptyList()
 )
+
+

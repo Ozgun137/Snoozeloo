@@ -1,8 +1,15 @@
+@file:OptIn(ExperimentalMaterial3Api::class)
+
 package com.example.snoozeloo.presentation.alarmlist
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -10,10 +17,14 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
@@ -28,18 +39,20 @@ import com.example.snoozeloo.presentation.components.SnoozelooFloatingActionButt
 import com.example.snoozeloo.presentation.components.SnoozelooScaffold
 import com.example.snoozeloo.presentation.components.SnoozelooToolBar
 import com.example.snoozeloo.presentation.components.SwipeableItem
+import com.example.snoozeloo.ui.theme.AlarmIcon
 import com.example.snoozeloo.ui.theme.SnoozelooBlue
 import com.example.snoozeloo.ui.theme.SnoozelooTheme
 
 @Composable
 fun AlarmListScreenRoot(
     viewModel: AlarmListViewModel = hiltViewModel(),
+    onCreateAlarmClicked: () -> Unit,
 ) {
     val alarmListState by viewModel.alarmListState.collectAsStateWithLifecycle()
 
     AlarmListScreen(
         alarmsUiState = alarmListState,
-        onCreateAlarmClicked = {},
+        onCreateAlarmClicked = { onCreateAlarmClicked() },
         onAlarmToggleChanged = { alarmID, alarmState ->
             viewModel.onAction(
                 AlarmListAction.OnAlarmToggleChanged(
@@ -62,13 +75,12 @@ fun AlarmListScreenRoot(
             viewModel.onAction(
                 AlarmListAction.OnAlarmViewCollapsed(id)
             )
-        }
+        },
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AlarmListScreen(
+private fun AlarmListScreen(
     modifier: Modifier = Modifier,
     onCreateAlarmClicked: () -> Unit,
     onAlarmToggleChanged: (Int, Boolean) -> Unit,
@@ -77,11 +89,6 @@ fun AlarmListScreen(
     onAlarmViewSwiped: (Int) -> Unit,
     onAlarmViewCollapsed: (Int) -> Unit
 ) {
-
-    val topAppBarState = rememberTopAppBarState()
-    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(
-        state = topAppBarState
-    )
 
     SnoozelooScaffold(
         topAppBar = {
@@ -94,52 +101,116 @@ fun AlarmListScreen(
             SnoozelooFloatingActionButton(
                 modifier = Modifier.padding(16.dp),
                 icon = Icons.Filled.Add,
-                onClick = {},
+                onClick = {
+                    onCreateAlarmClicked()
+                },
                 contentDescription = stringResource(R.string.create_alarm)
             )
         }
     ) { padding ->
-        LazyColumn(
-            modifier = modifier
-                .padding(16.dp)
-                .fillMaxSize()
-                .nestedScroll(scrollBehavior.nestedScrollConnection),
-            contentPadding = padding,
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+        Box(modifier = Modifier
+            .padding(padding)
+            .fillMaxSize(),
+            contentAlignment = Alignment.Center
         ) {
-            items(
-                items = alarmsUiState.alarms,
-                key = { alarmUi -> alarmUi.id }
-            ) { alarmUi ->
-                SwipeableItem(
-                    areActionsRevealed = alarmUi.areOptionsRevealed,
-                    onExpanded = {
-                        onAlarmViewSwiped(alarmUi.id)
-                    },
-                    onCollapsed = {
-                        onAlarmViewCollapsed(alarmUi.id)
-                    },
-                    actions = {
-                        ActionIcon(
-                            onClick = {
-                                onDeleteAlarmClicked(alarmUi.id)
-                            },
-                            backgroundColor = SnoozelooBlue,
-                            icon = Icons.Default.Delete,
-                            modifier = Modifier.fillMaxHeight()
-                        )
-                    }
-                ) {
-                    AlarmItemView(
-                        alarmToggleChanged = { alarmId, alarmState ->
-                            onAlarmToggleChanged(alarmId, alarmState)
+              if(alarmsUiState.alarms.isNotEmpty()) {
+                  AlarmsListContent(
+                      modifier = modifier,
+                      onCreateAlarmClicked = onCreateAlarmClicked,
+                      onAlarmToggleChanged = onAlarmToggleChanged,
+                      alarmsUiState = alarmsUiState,
+                      onDeleteAlarmClicked = onDeleteAlarmClicked,
+                      onAlarmViewSwiped = onAlarmViewSwiped,
+                      onAlarmViewCollapsed = onAlarmViewCollapsed
+                  )
+              }
+
+              else {
+                  AlarmListEmptyContent()
+              }
+        }
+
+    }
+}
+
+@Composable
+private fun AlarmsListContent(
+    modifier: Modifier = Modifier,
+    onCreateAlarmClicked: () -> Unit,
+    onAlarmToggleChanged: (Int, Boolean) -> Unit,
+    alarmsUiState: AlarmListState,
+    onDeleteAlarmClicked: (Int) -> Unit,
+    onAlarmViewSwiped: (Int) -> Unit,
+    onAlarmViewCollapsed: (Int) -> Unit
+) {
+    val topAppBarState = rememberTopAppBarState()
+    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(
+        state = topAppBarState
+    )
+
+    LazyColumn(
+        modifier = modifier
+            .padding(16.dp)
+            .fillMaxSize()
+            .nestedScroll(scrollBehavior.nestedScrollConnection),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        items(
+            items = alarmsUiState.alarms,
+            key = { alarmUi -> alarmUi.id }
+        ) { alarmUi ->
+            SwipeableItem(
+                areActionsRevealed = alarmUi.areOptionsRevealed,
+                onExpanded = {
+                    onAlarmViewSwiped(alarmUi.id)
+                },
+                onCollapsed = {
+                    onAlarmViewCollapsed(alarmUi.id)
+                },
+                actions = {
+                    ActionIcon(
+                        onClick = {
+                            onDeleteAlarmClicked(alarmUi.id)
                         },
-                        alarmUi = alarmUi
+                        backgroundColor = SnoozelooBlue,
+                        icon = Icons.Default.Delete,
+                        modifier = Modifier.fillMaxHeight()
                     )
                 }
+            ) {
+                AlarmItemView(
+                    alarmToggleChanged = { alarmId, alarmState ->
+                        onAlarmToggleChanged(alarmId, alarmState)
+                    },
+                    alarmUi = alarmUi
+                )
             }
-
         }
+
+    }
+}
+
+@Composable
+private fun AlarmListEmptyContent() {
+
+    Column (
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(32.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    )  {
+        Icon(
+            imageVector = AlarmIcon,
+            contentDescription = null,
+            tint = SnoozelooBlue
+        )
+
+        Spacer(modifier = Modifier.height(32.dp))
+
+       Text(
+           text = stringResource(R.string.alarm_list_empty),
+           style = MaterialTheme.typography.bodySmall
+       )
     }
 
 }

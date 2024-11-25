@@ -6,7 +6,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
-import com.example.snoozeloo.presentation.alarmlist.AlarmListScreen
+import com.example.snoozeloo.presentation.alarmSettings.AlarmSettingsScreenRoot
 import com.example.snoozeloo.presentation.alarmlist.AlarmListScreenRoot
 import kotlinx.serialization.Serializable
 
@@ -28,8 +28,18 @@ private fun NavGraphBuilder.alarmsGraph(
     navigation<Alarms>(startDestination = AlarmList) {
         composable<AlarmList> {
           AlarmListScreenRoot(
-
+             onCreateAlarmClicked = {
+                 navController.navigate(AlarmSettings)
+             }
           )
+        }
+
+        composable<AlarmSettings> {
+            AlarmSettingsScreenRoot(
+                onCancelClicked = {
+                    navController.navigateUp()
+                }
+            )
         }
     }
 }
@@ -39,4 +49,7 @@ object Alarms
 
 @Serializable
 object AlarmList
+
+@Serializable
+object AlarmSettings
 

@@ -41,6 +41,7 @@ val MontSerrat = FontFamily(
 
 val Typography = Typography(
 
+
     bodySmall = TextStyle(
         fontFamily = MontSerrat,
         fontWeight = FontWeight.Medium,
@@ -62,12 +63,5 @@ val Typography = Typography(
         fontSize = 42.sp,
         lineHeight = 51.2.sp,
     ),
-
-    labelLarge = TextStyle(
-        fontFamily = MontSerrat,
-        fontWeight = FontWeight.Medium,
-        fontSize = 52.sp,
-        lineHeight = 63.5.sp
-    )
 
 )

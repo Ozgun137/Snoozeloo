@@ -19,12 +19,14 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.snoozeloo.core.extensions.toSafeString
 import com.example.snoozeloo.presentation.model.AlarmUi
 import com.example.snoozeloo.ui.theme.SnoozelooBlue
 import com.example.snoozeloo.ui.theme.SnoozelooGray
 import com.example.snoozeloo.ui.theme.SnoozelooOpenBlue
 import com.example.snoozeloo.ui.theme.SnoozelooTheme
 import com.example.snoozeloo.ui.theme.SnoozelooWhite
+import java.time.LocalDateTime
 
 @Composable
 fun AlarmItemView(
@@ -46,7 +48,7 @@ fun AlarmItemView(
           verticalAlignment = Alignment.CenterVertically
       ) {
           Text(
-              text = alarmUi.name,
+              text = alarmUi.name.toSafeString(),
               style = MaterialTheme.typography.bodySmall,
               color = MaterialTheme.colorScheme.onBackground,
           )
