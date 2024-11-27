@@ -10,4 +10,6 @@ sealed interface AlarmSettingsAction {
     data class AlarmNameEntered(val name:String) : AlarmSettingsAction
     data object OnCancelClicked : AlarmSettingsAction
     data object OnSaveClicked : AlarmSettingsAction
+    data object OnAlarmNameClicked: AlarmSettingsAction
+    data object OnAlarmDialogDismissed: AlarmSettingsAction
 }

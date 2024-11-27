@@ -9,6 +9,8 @@ import com.example.snoozeloo.domain.alarmSettings.AlarmRemainingTimeCalculator
 import com.example.snoozeloo.presentation.alarmSettings.AlarmSettingsAction.AlarmNameEntered
 import com.example.snoozeloo.presentation.alarmSettings.AlarmSettingsAction.AlarmTimeChanged
 import com.example.snoozeloo.presentation.alarmSettings.AlarmSettingsAction.OnSaveClicked
+import com.example.snoozeloo.presentation.alarmSettings.AlarmSettingsAction.OnAlarmNameClicked
+import com.example.snoozeloo.presentation.alarmSettings.AlarmSettingsAction.OnAlarmDialogDismissed
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -51,6 +53,18 @@ class AlarmSettingsViewModel @Inject constructor(
 
             OnSaveClicked -> {
 
+            }
+
+            OnAlarmNameClicked -> {
+              _alarmSettingsState.update {
+                  it.copy(shouldShowDialog = true)
+              }
+            }
+
+            OnAlarmDialogDismissed -> {
+                _alarmSettingsState.update {
+                    it.copy(shouldShowDialog = false)
+                }
             }
 
             else -> {}
