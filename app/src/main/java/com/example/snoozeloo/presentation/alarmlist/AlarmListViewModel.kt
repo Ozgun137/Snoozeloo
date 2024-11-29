@@ -9,7 +9,6 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
-import java.time.LocalDateTime
 import javax.inject.Inject
 
 @HiltViewModel
@@ -85,19 +84,22 @@ class AlarmListViewModel @Inject constructor (
             AlarmUi(
                 id = 1,
                 name = "Wake Up",
-                alarmTime = "10:00 AM"
+                formattedAlarmTime = "10:00 AM",
+                formattedRemainingTime = "Alarm in 30 min"
             ),
 
             AlarmUi(
                 id = 2,
                 name = "Education",
-                alarmTime = "04:00 PM"
+                formattedAlarmTime = "04:00 PM",
+                formattedRemainingTime = "Alarm in 30 min"
             ),
 
             AlarmUi(
                 id = 3,
                 name = "Dinner",
-                alarmTime = "06:00 PM"
+                formattedAlarmTime = "06:00 PM",
+                formattedRemainingTime = "Alarm in 30 min"
             ),
         )
 

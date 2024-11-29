@@ -26,7 +26,6 @@ import com.example.snoozeloo.ui.theme.SnoozelooGray
 import com.example.snoozeloo.ui.theme.SnoozelooOpenBlue
 import com.example.snoozeloo.ui.theme.SnoozelooTheme
 import com.example.snoozeloo.ui.theme.SnoozelooWhite
-import java.time.LocalDateTime
 
 @Composable
 fun AlarmItemView(
@@ -72,7 +71,7 @@ fun AlarmItemView(
 
 
         Text(
-            text = alarmUi.alarmTime,
+            text = alarmUi.formattedAlarmTime,
             style = MaterialTheme.typography.bodyLarge,
             color = MaterialTheme.colorScheme.onBackground,
         )
@@ -80,7 +79,7 @@ fun AlarmItemView(
         Spacer(modifier = Modifier.height(10.dp))
 
         Text(
-            text = "Alarm in 30 min",
+            text = alarmUi.formattedRemainingTime,
             style = MaterialTheme.typography.bodySmall,
             color = SnoozelooGray
         )
@@ -98,7 +97,8 @@ fun AlarmItemViewPreview() = SnoozelooTheme {
         alarmUi = AlarmUi(
             id = 1,
             name =  "Wake Up",
-            alarmTime = "10:00 AM"
+            formattedAlarmTime = "10:00 AM",
+            formattedRemainingTime = "Alarm in 30min"
         )
     )
 }

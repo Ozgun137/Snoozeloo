@@ -1,4 +1,4 @@
-@file:OptIn(ExperimentalMaterial3Api::class)
+@file:OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3Api::class)
 
 package com.example.snoozeloo.presentation.alarmSettings
 
@@ -31,7 +31,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.snoozeloo.R
 import com.example.snoozeloo.presentation.components.SnoozelooDialog
-import com.example.snoozeloo.presentation.components.SnoozelooSaveButton
 import com.example.snoozeloo.presentation.components.SnoozelooScaffold
 import com.example.snoozeloo.presentation.components.SnoozelooTimePicker
 import com.example.snoozeloo.presentation.components.SnoozelooToolBar
@@ -73,7 +72,10 @@ private fun AlarmSettingsScreen(
                 modifier = modifier,
                 showCancelButton = true,
                 showSaveButton = true,
-                onCancelButtonClick = onCancelClicked
+                onCancelButtonClick = onCancelClicked,
+                onSaveButtonClick = {
+                    onAction(AlarmSettingsAction.OnSaveClicked)
+                }
             )
         }
     ) { padding ->
@@ -162,17 +164,15 @@ private fun AlarmSettingsScreen(
                     onDismiss = {
                         onAction(AlarmSettingsAction.OnAlarmDialogDismissed)
                     },
-                    onSaveClicked = {},
-                    saveButton = {
-                        SnoozelooSaveButton(
-                            onSaveButtonClicked = {},
-                            buttonText = R.string.save,
-                        )
+                    onSaveClicked = { alarmName->
+                       onAction(AlarmSettingsAction.AlarmNameEntered(alarmName))
+                       onAction(AlarmSettingsAction.OnAlarmDialogDismissed)
                     }
                 )
             }
         }
     }
+
 }
 
 

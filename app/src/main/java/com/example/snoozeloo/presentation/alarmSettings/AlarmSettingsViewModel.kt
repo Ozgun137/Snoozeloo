@@ -6,6 +6,8 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.snoozeloo.domain.alarmSettings.AlarmRemainingTimeCalculator
+import com.example.snoozeloo.domain.alarmSettings.AlarmScheduler
+import com.example.snoozeloo.domain.model.AlarmItem
 import com.example.snoozeloo.presentation.alarmSettings.AlarmSettingsAction.AlarmNameEntered
 import com.example.snoozeloo.presentation.alarmSettings.AlarmSettingsAction.AlarmTimeChanged
 import com.example.snoozeloo.presentation.alarmSettings.AlarmSettingsAction.OnSaveClicked
@@ -24,7 +26,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AlarmSettingsViewModel @Inject constructor(
-    private val alarmRemainingTimeCalculator: AlarmRemainingTimeCalculator
+    private val alarmRemainingTimeCalculator: AlarmRemainingTimeCalculator,
+    private val alarmScheduler: AlarmScheduler
 ) : ViewModel() {
 
     private val _alarmSettingsState = MutableStateFlow(AlarmSettingsState())
@@ -45,6 +48,13 @@ class AlarmSettingsViewModel @Inject constructor(
                 calculateRemainingTime(
                     selectedTime = selectedDateTime
                 )
+
+                _alarmSettingsState.update {
+                    it.copy(
+                        hour = action.alarmState.hour,
+                        minutes = action.alarmState.minute
+                    )
+                }
             }
 
             is AlarmNameEntered -> {
@@ -52,7 +62,19 @@ class AlarmSettingsViewModel @Inject constructor(
             }
 
             OnSaveClicked -> {
+                val hour = alarmSettingsState.value.hour
+                val minute = alarmSettingsState.value.minutes
 
+                alarmScheduler.schedule(
+                    alarmItem = AlarmItem(
+                        alarmTime = LocalDateTime
+                            .now()
+                            .withHour(hour)
+                            .withMinute(minute)
+                            .withSecond(0)
+                            .withNano(0)
+                    )
+                )
             }
 
             OnAlarmNameClicked -> {
