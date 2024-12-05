@@ -75,6 +75,7 @@ class AlarmSettingsViewModel @Inject constructor(
 
                 alarmScheduler.schedule(
                     alarmItem = AlarmItem(
+                        isAlarmEnabled = true,
                         alarmTime = LocalDateTime
                             .now()
                             .withHour(hour)
