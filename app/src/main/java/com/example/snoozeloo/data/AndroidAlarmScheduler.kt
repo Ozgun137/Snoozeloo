@@ -20,7 +20,9 @@ class AndroidAlarmScheduler @Inject constructor(
         val intent = Intent(
             context,
             AlarmReceiver::class.java
-        )
+        ).apply {
+            putExtra("alarmName", alarmItem.alarmName)
+        }
 
         alarmManager.setExactAndAllowWhileIdle(
             AlarmManager.RTC_WAKEUP,

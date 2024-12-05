@@ -2,6 +2,7 @@
 
 package com.example.snoozeloo.presentation.alarmSettings
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -30,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.snoozeloo.R
+import com.example.snoozeloo.presentation.ObserveAsEvents
 import com.example.snoozeloo.presentation.components.SnoozelooDialog
 import com.example.snoozeloo.presentation.components.SnoozelooScaffold
 import com.example.snoozeloo.presentation.components.SnoozelooTimePicker
@@ -42,14 +44,28 @@ import com.example.snoozeloo.ui.theme.SnoozelooTheme
 @Composable
 fun AlarmSettingsScreenRoot(
     viewModel: AlarmSettingsViewModel = hiltViewModel(),
-    onCancelClicked: () -> Unit
+    onCancelClicked: () -> Unit,
 ) {
     val alarmSettingsState by viewModel.alarmSettingsState.collectAsStateWithLifecycle()
+    val context = LocalContext.current
+
+    ObserveAsEvents(viewModel.events) { event->
+        when(event) {
+             is AlarmSettingsEvent.AlarmScheduled -> {
+                 Toast.makeText(
+                     context,
+                     context.getString(R.string.alarmScheduledIn,event.formattedRemainingTime),
+                     Toast.LENGTH_LONG
+                 ).show()
+             }
+        }
+    }
 
     AlarmSettingsScreen(
         alarmSettingsState = alarmSettingsState,
         onCancelClicked = onCancelClicked,
         onAction = { action ->
+
             viewModel.onAction(action)
         }
     )

@@ -15,11 +15,14 @@ import com.example.snoozeloo.presentation.alarmSettings.AlarmSettingsAction.OnAl
 import com.example.snoozeloo.presentation.alarmSettings.AlarmSettingsAction.OnAlarmDialogDismissed
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import java.time.LocalTime
 import javax.inject.Inject
@@ -32,6 +35,9 @@ class AlarmSettingsViewModel @Inject constructor(
 
     private val _alarmSettingsState = MutableStateFlow(AlarmSettingsState())
     val alarmSettingsState = _alarmSettingsState.asStateFlow()
+
+    private val eventChannel = Channel<AlarmSettingsEvent>()
+    val events = eventChannel.receiveAsFlow()
 
     private var remainingTimeJob: Job? = null
 
@@ -58,12 +64,14 @@ class AlarmSettingsViewModel @Inject constructor(
             }
 
             is AlarmNameEntered -> {
-
+                _alarmSettingsState.update {
+                    it.copy(alarmName = action.name)
+                }
             }
 
             OnSaveClicked -> {
-                val hour = alarmSettingsState.value.hour
-                val minute = alarmSettingsState.value.minutes
+                val hour = _alarmSettingsState.value.hour
+                val minute = _alarmSettingsState.value.minutes
 
                 alarmScheduler.schedule(
                     alarmItem = AlarmItem(
@@ -72,15 +80,24 @@ class AlarmSettingsViewModel @Inject constructor(
                             .withHour(hour)
                             .withMinute(minute)
                             .withSecond(0)
-                            .withNano(0)
+                            .withNano(0),
+                        alarmName = _alarmSettingsState.value.alarmName
                     )
                 )
+
+                viewModelScope.launch {
+                    eventChannel.send(
+                        AlarmSettingsEvent.AlarmScheduled(
+                            _alarmSettingsState.value.formattedRemainingTime
+                        )
+                    )
+                }
             }
 
             OnAlarmNameClicked -> {
-              _alarmSettingsState.update {
-                  it.copy(shouldShowDialog = true)
-              }
+                _alarmSettingsState.update {
+                    it.copy(shouldShowDialog = true)
+                }
             }
 
             OnAlarmDialogDismissed -> {
