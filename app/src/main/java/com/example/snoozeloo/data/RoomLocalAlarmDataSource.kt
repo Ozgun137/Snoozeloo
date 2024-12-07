@@ -10,8 +10,9 @@ import com.example.snoozeloo.domain.util.DataError
 import com.example.snoozeloo.domain.util.Result
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import javax.inject.Inject
 
-class RoomLocalAlarmDataSource(
+class RoomLocalAlarmDataSource @Inject constructor(
     private val roomDao: AlarmDao
 ) : AlarmRepository {
 
@@ -32,7 +33,15 @@ class RoomLocalAlarmDataSource(
             }
         }
 
-    override suspend fun deleteAlarm(id: Int) {
+    override suspend fun deleteAlarm(id: String) {
         roomDao.deleteAlarm(id)
+    }
+
+    override suspend fun disableAlarm(id: String) {
+        roomDao.disableAlarm(id)
+    }
+
+    override suspend fun enableAlarm(id: String) {
+        roomDao.enableAlarm(id)
     }
 }

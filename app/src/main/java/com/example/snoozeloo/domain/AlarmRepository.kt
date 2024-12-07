@@ -8,5 +8,7 @@ import kotlinx.coroutines.flow.Flow
 interface AlarmRepository {
    suspend fun upsertAlarm(alarmItem: AlarmItem) : Result<Unit, DataError.Local>
    fun getAlarms(): Flow<List<AlarmItem>>
-   suspend fun deleteAlarm(id:Int)
+   suspend fun deleteAlarm(id:String)
+   suspend fun disableAlarm(id:String)
+   suspend fun enableAlarm(id:String)
 }

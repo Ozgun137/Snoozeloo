@@ -58,6 +58,14 @@ fun AlarmSettingsScreenRoot(
                      Toast.LENGTH_LONG
                  ).show()
              }
+
+            AlarmSettingsEvent.AlarmSaveFailed -> {
+                Toast.makeText(
+                    context,
+                    context.getString(R.string.error_disk_full),
+                    Toast.LENGTH_LONG
+                ).show()
+            }
         }
     }
 
@@ -113,6 +121,7 @@ private fun AlarmSettingsScreen(
                 contentAlignment = Alignment.Center
             ) {
                 SnoozelooTimePicker(
+                    is24HourTime = context.isIn24HourFormat(),
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(12.dp),
@@ -121,7 +130,6 @@ private fun AlarmSettingsScreen(
                             AlarmSettingsAction.AlarmTimeChanged(timePickerState)
                         )
                     },
-                    is24HourTime = context.isIn24HourFormat()
                 )
 
                 Text(

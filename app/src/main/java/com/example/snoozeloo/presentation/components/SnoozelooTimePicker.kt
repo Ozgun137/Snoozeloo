@@ -16,15 +16,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.snoozeloo.ui.theme.SnoozelooTheme
 import java.time.LocalDateTime
-import java.util.Calendar
 
 @Composable
 fun SnoozelooTimePicker(
   modifier: Modifier = Modifier,
   onTimeStateValueChanged: (TimePickerState) -> Unit,
-  is24HourTime: Boolean = false
+  is24HourTime: Boolean,
 ) {
-
 
     val timePickerState = rememberTimePickerState(
         initialHour = LocalDateTime.now().hour,
@@ -52,6 +50,7 @@ private fun SnoozelooTimePickerPreview() = SnoozelooTheme {
         modifier = Modifier.fillMaxSize()
     ) {
         SnoozelooTimePicker(
+            is24HourTime = true,
             onTimeStateValueChanged = {},
             modifier = Modifier.fillMaxSize(),
         )

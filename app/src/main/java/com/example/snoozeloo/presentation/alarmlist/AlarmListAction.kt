@@ -2,7 +2,7 @@ package com.example.snoozeloo.presentation.alarmlist
 
 sealed interface AlarmListAction {
     data class OnAlarmToggleChanged(
-        val alarmID: Int,
+        val alarmID: String,
         val isAlarmEnabled: Boolean
     ) : AlarmListAction
 
@@ -11,14 +11,14 @@ sealed interface AlarmListAction {
     data object OnCreateAlarmButtonClicked : AlarmListAction
 
     data class OnAlarmViewSwiped (
-        val alarmID: Int
+        val alarmID: String
     ): AlarmListAction
 
     data class OnAlarmViewCollapsed(
-        val alarmID: Int
+        val alarmID: String
     ) : AlarmListAction
 
     data class OnAlarmDeleted(
-        val alarmID: Int
+        val alarmID: String
     ): AlarmListAction
 }

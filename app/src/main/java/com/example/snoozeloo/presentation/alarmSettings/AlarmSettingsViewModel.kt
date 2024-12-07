@@ -5,9 +5,11 @@ package com.example.snoozeloo.presentation.alarmSettings
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.snoozeloo.domain.AlarmRepository
 import com.example.snoozeloo.domain.alarmSettings.AlarmRemainingTimeCalculator
 import com.example.snoozeloo.domain.alarmSettings.AlarmScheduler
 import com.example.snoozeloo.domain.model.AlarmItem
+import com.example.snoozeloo.domain.util.Result
 import com.example.snoozeloo.presentation.alarmSettings.AlarmSettingsAction.AlarmNameEntered
 import com.example.snoozeloo.presentation.alarmSettings.AlarmSettingsAction.AlarmTimeChanged
 import com.example.snoozeloo.presentation.alarmSettings.AlarmSettingsAction.OnSaveClicked
@@ -30,7 +32,8 @@ import javax.inject.Inject
 @HiltViewModel
 class AlarmSettingsViewModel @Inject constructor(
     private val alarmRemainingTimeCalculator: AlarmRemainingTimeCalculator,
-    private val alarmScheduler: AlarmScheduler
+    private val alarmScheduler: AlarmScheduler,
+    private val alarmRepository: AlarmRepository
 ) : ViewModel() {
 
     private val _alarmSettingsState = MutableStateFlow(AlarmSettingsState())
@@ -73,18 +76,28 @@ class AlarmSettingsViewModel @Inject constructor(
                 val hour = _alarmSettingsState.value.hour
                 val minute = _alarmSettingsState.value.minutes
 
-                alarmScheduler.schedule(
-                    alarmItem = AlarmItem(
-                        isAlarmEnabled = true,
-                        alarmTime = LocalDateTime
-                            .now()
-                            .withHour(hour)
-                            .withMinute(minute)
-                            .withSecond(0)
-                            .withNano(0),
-                        alarmName = _alarmSettingsState.value.alarmName
-                    )
+                val currentTime = LocalDateTime.now()
+
+                var alarmTime = LocalDateTime
+                    .now()
+                    .withHour(hour)
+                    .withMinute(minute)
+                    .withSecond(0)
+                    .withNano(0)
+
+                if(alarmTime.isBefore(currentTime)) {
+                    alarmTime = alarmTime.plusDays(1)
+                }
+
+
+                val alarmItem = AlarmItem(
+                    isAlarmEnabled = true,
+                    alarmTime = alarmTime,
+                    alarmName = _alarmSettingsState.value.alarmName
                 )
+
+                scheduleAlarm(alarmItem)
+                saveAlarm(alarmItem)
 
                 viewModelScope.launch {
                     eventChannel.send(
@@ -109,6 +122,22 @@ class AlarmSettingsViewModel @Inject constructor(
 
             else -> {}
 
+        }
+    }
+
+    private fun scheduleAlarm(alarmItem: AlarmItem) {
+        alarmScheduler.schedule(
+            alarmItem = alarmItem
+        )
+    }
+
+    private fun saveAlarm(alarmItem: AlarmItem) = viewModelScope.launch {
+        val result = alarmRepository.upsertAlarm(
+            alarmItem = alarmItem
+        )
+
+        if(result is Result.Error) {
+            eventChannel.send(AlarmSettingsEvent.AlarmSaveFailed)
         }
     }
 

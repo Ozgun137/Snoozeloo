@@ -1,4 +1,4 @@
-package com.example.snoozeloo.data.database.di
+package com.example.snoozeloo.data.di
 
 import android.app.Application
 import androidx.room.Room

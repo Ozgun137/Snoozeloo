@@ -6,6 +6,7 @@ import java.time.LocalDateTime
 
 fun AlarmEntity.toAlarmItem(): AlarmItem {
    return AlarmItem(
+       id = id,
        isAlarmEnabled = isAlarmEnabled,
        alarmName = alarmName,
        alarmTime = LocalDateTime
@@ -19,9 +20,10 @@ fun AlarmEntity.toAlarmItem(): AlarmItem {
 
 fun AlarmItem.toAlarmEntity(): AlarmEntity {
     return AlarmEntity(
+        id = id,
         alarmName = alarmName,
         isAlarmEnabled = isAlarmEnabled,
         hour = alarmTime.hour,
-        minute = alarmTime.minute
+        minute = alarmTime.minute,
     )
 }

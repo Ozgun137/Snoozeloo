@@ -16,5 +16,11 @@ interface AlarmDao {
     fun getAlarms(): Flow<List<AlarmEntity>>
 
     @Query("DELETE FROM alarmEntity WHERE id=:id")
-    suspend fun deleteAlarm(id:Int)
+    suspend fun deleteAlarm(id:String)
+
+    @Query("UPDATE alarmEntity SET isAlarmEnabled = 0 WHERE id=:id")
+    suspend fun disableAlarm(id:String)
+
+    @Query("UPDATE alarmEntity SET isAlarmEnabled = 1 WHERE id=:id")
+    suspend fun enableAlarm(id:String)
 }

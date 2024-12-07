@@ -23,10 +23,12 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -39,6 +41,7 @@ import com.example.snoozeloo.presentation.components.SnoozelooFloatingActionButt
 import com.example.snoozeloo.presentation.components.SnoozelooScaffold
 import com.example.snoozeloo.presentation.components.SnoozelooToolBar
 import com.example.snoozeloo.presentation.components.SwipeableItem
+import com.example.snoozeloo.presentation.util.isIn24HourFormat
 import com.example.snoozeloo.ui.theme.AlarmIcon
 import com.example.snoozeloo.ui.theme.SnoozelooBlue
 import com.example.snoozeloo.ui.theme.SnoozelooTheme
@@ -49,6 +52,12 @@ fun AlarmListScreenRoot(
     onCreateAlarmClicked: () -> Unit,
 ) {
     val alarmListState by viewModel.alarmListState.collectAsStateWithLifecycle()
+    val context = LocalContext.current
+    val is24HourFormat = context.isIn24HourFormat()
+
+    LaunchedEffect(is24HourFormat) {
+        viewModel.loadAlarms(is24HourFormat)
+    }
 
     AlarmListScreen(
         alarmsUiState = alarmListState,
@@ -65,6 +74,8 @@ fun AlarmListScreenRoot(
             viewModel.onAction(
                 AlarmListAction.OnAlarmDeleted(id)
             )
+
+            viewModel.loadAlarms(is24HourFormat)
         },
         onAlarmViewSwiped = { id->
             viewModel.onAction(
@@ -83,11 +94,11 @@ fun AlarmListScreenRoot(
 private fun AlarmListScreen(
     modifier: Modifier = Modifier,
     onCreateAlarmClicked: () -> Unit,
-    onAlarmToggleChanged: (Int, Boolean) -> Unit,
+    onAlarmToggleChanged: (String, Boolean) -> Unit,
     alarmsUiState: AlarmListState,
-    onDeleteAlarmClicked: (Int) -> Unit,
-    onAlarmViewSwiped: (Int) -> Unit,
-    onAlarmViewCollapsed: (Int) -> Unit
+    onDeleteAlarmClicked: (String) -> Unit,
+    onAlarmViewSwiped: (String) -> Unit,
+    onAlarmViewCollapsed: (String) -> Unit
 ) {
 
     SnoozelooScaffold(
@@ -116,7 +127,6 @@ private fun AlarmListScreen(
               if(alarmsUiState.alarms.isNotEmpty()) {
                   AlarmsListContent(
                       modifier = modifier,
-                      onCreateAlarmClicked = onCreateAlarmClicked,
                       onAlarmToggleChanged = onAlarmToggleChanged,
                       alarmsUiState = alarmsUiState,
                       onDeleteAlarmClicked = onDeleteAlarmClicked,
@@ -136,23 +146,17 @@ private fun AlarmListScreen(
 @Composable
 private fun AlarmsListContent(
     modifier: Modifier = Modifier,
-    onCreateAlarmClicked: () -> Unit,
-    onAlarmToggleChanged: (Int, Boolean) -> Unit,
+    onAlarmToggleChanged: (String, Boolean) -> Unit,
     alarmsUiState: AlarmListState,
-    onDeleteAlarmClicked: (Int) -> Unit,
-    onAlarmViewSwiped: (Int) -> Unit,
-    onAlarmViewCollapsed: (Int) -> Unit
+    onDeleteAlarmClicked: (String) -> Unit,
+    onAlarmViewSwiped: (String) -> Unit,
+    onAlarmViewCollapsed: (String) -> Unit
 ) {
-    val topAppBarState = rememberTopAppBarState()
-    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(
-        state = topAppBarState
-    )
 
     LazyColumn(
         modifier = modifier
             .padding(16.dp)
-            .fillMaxSize()
-            .nestedScroll(scrollBehavior.nestedScrollConnection),
+            .fillMaxSize(),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         items(
@@ -192,7 +196,6 @@ private fun AlarmsListContent(
 
 @Composable
 private fun AlarmListEmptyContent() {
-
     Column (
         modifier = Modifier
             .fillMaxWidth()

@@ -17,9 +17,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.snoozeloo.core.extensions.toSafeString
+import com.example.snoozeloo.R
 import com.example.snoozeloo.presentation.model.AlarmUi
 import com.example.snoozeloo.ui.theme.SnoozelooBlue
 import com.example.snoozeloo.ui.theme.SnoozelooGray
@@ -30,7 +31,7 @@ import com.example.snoozeloo.ui.theme.SnoozelooWhite
 @Composable
 fun AlarmItemView(
     modifier: Modifier = Modifier,
-    alarmToggleChanged: (Int, Boolean) -> Unit,
+    alarmToggleChanged: (String, Boolean) -> Unit,
     alarmUi: AlarmUi
 ) {
     Column (
@@ -46,8 +47,9 @@ fun AlarmItemView(
              .fillMaxWidth(),
           verticalAlignment = Alignment.CenterVertically
       ) {
+
           Text(
-              text = alarmUi.name.toSafeString(),
+              text = alarmUi.name.ifEmpty { "---" },
               style = MaterialTheme.typography.bodySmall,
               color = MaterialTheme.colorScheme.onBackground,
           )
@@ -79,7 +81,7 @@ fun AlarmItemView(
         Spacer(modifier = Modifier.height(10.dp))
 
         Text(
-            text = alarmUi.formattedRemainingTime,
+            text = stringResource(R.string.alarmIn,alarmUi.formattedRemainingTime),
             style = MaterialTheme.typography.bodySmall,
             color = SnoozelooGray
         )
@@ -91,14 +93,14 @@ fun AlarmItemView(
 @Composable
 fun AlarmItemViewPreview() = SnoozelooTheme {
     AlarmItemView(
-        alarmToggleChanged = { id,isEnabled ->
-
-        },
+        alarmToggleChanged = { _,_ -> },
         alarmUi = AlarmUi(
-            id = 1,
-            name =  "Wake Up",
+            id = "1",
+            name =  "",
             formattedAlarmTime = "10:00 AM",
-            formattedRemainingTime = "Alarm in 30min"
+            formattedRemainingTime = "30 min",
+            hour = 10,
+            minute = 0
         )
     )
 }

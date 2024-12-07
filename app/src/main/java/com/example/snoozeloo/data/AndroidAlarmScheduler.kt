@@ -22,28 +22,31 @@ class AndroidAlarmScheduler @Inject constructor(
             AlarmReceiver::class.java
         ).apply {
             putExtra("alarmName", alarmItem.alarmName)
+            putExtra("alarmID", alarmItem.id)
         }
 
         alarmManager.setExactAndAllowWhileIdle(
             AlarmManager.RTC_WAKEUP,
-            alarmItem.alarmTime.atZone(ZoneId.systemDefault()).toEpochSecond() * 1000,
+            alarmItem.alarmTime.atZone(ZoneId.systemDefault()).toEpochSecond() * 1_000L,
             PendingIntent.getBroadcast(
                 context,
-                alarmItem.hashCode(),
+                alarmItem.id.hashCode(),
                 intent,
                 PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
             )
         )
     }
 
-    override fun cancel(alarmItem: AlarmItem) {
+    override fun cancel(alarmID:String) {
         alarmManager.cancel(
             PendingIntent.getBroadcast(
                 context,
-                alarmItem.hashCode(),
+                alarmID.hashCode(),
                 Intent(context,AlarmReceiver::class.java),
                 PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
             )
         )
+
+        AlarmReceiver.stopMediaPlayer(alarmID)
     }
 }
