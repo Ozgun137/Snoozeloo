@@ -7,5 +7,6 @@ data class AlarmSettingsState(
     val shouldShowDialog: Boolean = false,
     val hour: Int = 0,
     val minutes: Int = 0,
-    val alarmName: String = ""
+    val alarmName: String = "",
+    val showNotificationRationale: Boolean = false,
 )

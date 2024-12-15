@@ -18,7 +18,8 @@ private val LightColorScheme = lightColorScheme(
     background = SnoozelooWhite,
     onBackground = SnoozelooBlack,
     onSurfaceVariant = SnoozelooGray,
-    surface = Color.White
+    surface = Color.White,
+    onSurface = SnoozelooBlack
 
     /* Other default colors to override
     background = Color(0xFFFFFBFE),

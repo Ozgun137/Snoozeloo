@@ -12,37 +12,56 @@ import android.view.WindowManager
 import androidx.core.app.NotificationCompat
 import com.example.snoozeloo.R
 import com.example.snoozeloo.presentation.triggerAlarm.TriggerAlarmActivity
+import java.time.LocalDateTime
 
 fun Context.showNotificationWithFullScreenIntent(
     channelId: String = CHANNEL_ID,
     title: String,
+    alarmID: String,
+    alarmTime: String,
     description: String = ""
 ) {
-    val notificationBuilder = NotificationCompat.Builder(this,channelId)
+    val notificationBuilder = NotificationCompat.Builder(this, channelId)
         .setSmallIcon(R.drawable.ic_alarm)
         .setContentTitle(title)
         .setContentText(description)
         .setPriority(NotificationCompat.PRIORITY_HIGH)
-        .setFullScreenIntent(getFullScreenIntent(),true)
+        .setFullScreenIntent(
+            getFullScreenIntent(
+                alarmID = alarmID,
+                alarmName = title,
+                alarmTime = alarmTime,
+            ),
+            true
+        )
 
     val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
     with(notificationManager) {
         buildNotificationChannel()
         val notification = notificationBuilder.build()
-        notify(0,notification)
+        notify(0, notification)
     }
 }
 
-private fun Context.getFullScreenIntent(): PendingIntent {
-    val intent = Intent(this, TriggerAlarmActivity::class.java)
+private fun Context.getFullScreenIntent(
+    alarmID: String,
+    alarmName: String,
+    alarmTime: String
+): PendingIntent {
+    val intent = Intent(this, TriggerAlarmActivity::class.java).apply {
+        putExtra("alarmID", alarmID)
+        putExtra("alarmName", alarmName)
+        putExtra("alarmTime", alarmTime)
+    }
     return PendingIntent.getActivity(
-        this,0,intent,
-        PendingIntent.FLAG_IMMUTABLE)
+        this, 0, intent,
+        PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+    )
 }
 
 private fun NotificationManager.buildNotificationChannel() {
-    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
         val channel = NotificationChannel(
             CHANNEL_ID,
             "Alarm",

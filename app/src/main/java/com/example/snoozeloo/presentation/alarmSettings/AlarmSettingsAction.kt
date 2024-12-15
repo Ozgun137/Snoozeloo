@@ -12,4 +12,9 @@ sealed interface AlarmSettingsAction {
     data object OnSaveClicked : AlarmSettingsAction
     data object OnAlarmNameClicked: AlarmSettingsAction
     data object OnAlarmDialogDismissed: AlarmSettingsAction
+    data object DismissRationaleDialog: AlarmSettingsAction
+    data class SubmitNotificationPermissionInfo(
+        val isPermissionGranted:Boolean,
+        val showNotificationPermissionRationale:Boolean
+    ) : AlarmSettingsAction
 }

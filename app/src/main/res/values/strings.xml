@@ -10,4 +10,7 @@
     <string name="alarm_icon">Alarm icon</string>
     <string name="turn_off">Turn Off\n\n</string>
     <string name="error_disk_full">Can\'t save the item because the disk is full!</string>
+    <string name="okay">Okay</string>
+    <string name="permission_required">Permission required</string>
+    <string name="notification_rationale">In order to notify you when an alarm goes off, this app needs your permission for that. Please click on Okay to Grant it</string>
 </resources>

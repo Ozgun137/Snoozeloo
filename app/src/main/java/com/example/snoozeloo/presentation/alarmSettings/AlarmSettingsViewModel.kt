@@ -15,6 +15,7 @@ import com.example.snoozeloo.presentation.alarmSettings.AlarmSettingsAction.Alar
 import com.example.snoozeloo.presentation.alarmSettings.AlarmSettingsAction.OnSaveClicked
 import com.example.snoozeloo.presentation.alarmSettings.AlarmSettingsAction.OnAlarmNameClicked
 import com.example.snoozeloo.presentation.alarmSettings.AlarmSettingsAction.OnAlarmDialogDismissed
+import com.example.snoozeloo.presentation.alarmSettings.AlarmSettingsAction.SubmitNotificationPermissionInfo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
@@ -117,6 +118,14 @@ class AlarmSettingsViewModel @Inject constructor(
             OnAlarmDialogDismissed -> {
                 _alarmSettingsState.update {
                     it.copy(shouldShowDialog = false)
+                }
+            }
+
+            is SubmitNotificationPermissionInfo -> {
+                _alarmSettingsState.update {
+                    it.copy(
+                        showNotificationRationale = action.showNotificationPermissionRationale
+                    )
                 }
             }
 

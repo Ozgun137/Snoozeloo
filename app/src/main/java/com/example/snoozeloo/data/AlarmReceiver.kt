@@ -10,6 +10,7 @@ import android.net.Uri
 import android.provider.Settings
 import com.example.snoozeloo.core.extensions.toSafeString
 import com.example.snoozeloo.core.showNotificationWithFullScreenIntent
+import java.time.LocalDateTime
 
 class AlarmReceiver : BroadcastReceiver() {
 
@@ -36,6 +37,7 @@ class AlarmReceiver : BroadcastReceiver() {
             ?: Settings.System.DEFAULT_ALARM_ALERT_URI
 
         val alarmName = intent?.getStringExtra("alarmName").toSafeString()
+        val alarmTime = intent?.getStringExtra("alarmTime").toSafeString()
         val alarmID = intent?.getStringExtra("alarmID").toSafeString()
 
         currentAlarmId = alarmID
@@ -54,7 +56,9 @@ class AlarmReceiver : BroadcastReceiver() {
         }
 
         context.showNotificationWithFullScreenIntent(
-            title = alarmName
+            title = alarmName,
+            alarmID = alarmID,
+            alarmTime = alarmTime
         )
     }
 

@@ -1,18 +1,14 @@
 package com.example.snoozeloo.presentation.triggerAlarm
 
-import android.widget.Space
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -20,21 +16,43 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.snoozeloo.R
 import com.example.snoozeloo.ui.theme.AlarmIcon
 import com.example.snoozeloo.ui.theme.SnoozelooBlue
 import com.example.snoozeloo.ui.theme.SnoozelooTheme
 
+
+@Composable
+fun TriggerAlarmScreenRoot(
+    alarmID: String,
+    alarmName: String,
+    alarmTime : String,
+    viewModel: TriggerAlarmViewModel = hiltViewModel()
+) {
+    TriggerAlarmScreen(
+        alarmID = alarmID,
+        alarmTime = alarmTime,
+        alarmName = alarmName,
+        onTurnOffAlarmClicked = { id->
+            viewModel.onAction(TriggerAlarmAction.OnTurnOffAlarmClicked(id))
+        }
+    )
+
+}
 @Composable
 fun TriggerAlarmScreen(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    alarmID: String,
+    alarmName: String,
+    alarmTime : String,
+    onTurnOffAlarmClicked: (String) -> Unit
 ) {
 
     Column (
@@ -53,7 +71,7 @@ fun TriggerAlarmScreen(
         Spacer(modifier = Modifier.height(24.dp))
         
         Text(
-            text = "10:00",
+            text = alarmTime,
             style = MaterialTheme.typography.bodyLarge.copy(
                 fontSize = 76.sp,
                 color = SnoozelooBlue
@@ -63,7 +81,7 @@ fun TriggerAlarmScreen(
         Spacer(modifier = Modifier.height(16.dp))
 
         Text(
-            text = "WORK",
+            text = alarmName,
             style = MaterialTheme.typography.bodyMedium.copy(
                 fontWeight = FontWeight.SemiBold
             )
@@ -72,7 +90,9 @@ fun TriggerAlarmScreen(
         Spacer(modifier = Modifier.height(24.dp))
 
         Button(
-            onClick = {  },
+            onClick = {
+                onTurnOffAlarmClicked(alarmID)
+            },
             colors = ButtonDefaults.buttonColors(
                 containerColor = SnoozelooBlue,
                 contentColor = Color.White
@@ -94,6 +114,11 @@ fun TriggerAlarmScreen(
 @Composable
 @Preview
 fun TriggerAlarmScreenPreview() = SnoozelooTheme {
-    TriggerAlarmScreen()
+    TriggerAlarmScreen(
+        alarmName = "WORK",
+        alarmTime = "10:00",
+        alarmID = "1",
+        onTurnOffAlarmClicked = {}
+    )
 }
 

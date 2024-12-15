@@ -6,6 +6,8 @@ import android.content.Context
 import android.content.Intent
 import com.example.snoozeloo.domain.alarmSettings.AlarmScheduler
 import com.example.snoozeloo.domain.model.AlarmItem
+import com.example.snoozeloo.presentation.alarmlist.toFormattedAlarmTime
+import com.example.snoozeloo.presentation.util.isIn24HourFormat
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.time.ZoneId
 import javax.inject.Inject
@@ -22,6 +24,7 @@ class AndroidAlarmScheduler @Inject constructor(
             AlarmReceiver::class.java
         ).apply {
             putExtra("alarmName", alarmItem.alarmName)
+            putExtra("alarmTime", alarmItem.alarmTime.toFormattedAlarmTime(context.isIn24HourFormat()))
             putExtra("alarmID", alarmItem.id)
         }
 

@@ -85,20 +85,19 @@ class AlarmListViewModel @Inject constructor(
                 deleteAlarm(action.alarmID)
             }
 
-            AlarmListAction.OnAlarmClicked -> {}
-            AlarmListAction.OnCreateAlarmButtonClicked -> {}
+            else -> {}
         }
     }
-
 
     fun loadAlarms(isIn24HourFormat: Boolean) {
         viewModelScope.launch {
             repository.getAlarms().collect { alarms ->
-                val alarmUiList = alarms.map { it.toAlarmUi(isIn24HourFormat) }
+                val sortedAlarms = alarms.sortedBy { it.alarmTime }
+                val alarmUiList = sortedAlarms.map { it.toAlarmUi(isIn24HourFormat) }
                 _alarmListState.update { it.copy(alarms = alarmUiList) }
 
                 combine(
-                    alarms.map { alarm ->
+                    sortedAlarms.map { alarm ->
                         remainingTimeCalculator(alarm.alarmTime).map { remainingTime ->
                             alarm.id to remainingTime.toFormattedRemainingTime()
                         }

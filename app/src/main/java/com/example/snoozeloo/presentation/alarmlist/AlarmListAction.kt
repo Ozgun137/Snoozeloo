@@ -6,8 +6,6 @@ sealed interface AlarmListAction {
         val isAlarmEnabled: Boolean
     ) : AlarmListAction
 
-    data object OnAlarmClicked : AlarmListAction
-
     data object OnCreateAlarmButtonClicked : AlarmListAction
 
     data class OnAlarmViewSwiped (
