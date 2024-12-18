@@ -12,7 +12,6 @@ import android.view.WindowManager
 import androidx.core.app.NotificationCompat
 import com.example.snoozeloo.R
 import com.example.snoozeloo.presentation.triggerAlarm.TriggerAlarmActivity
-import java.time.LocalDateTime
 
 fun Context.showNotificationWithFullScreenIntent(
     channelId: String = CHANNEL_ID,
@@ -26,6 +25,7 @@ fun Context.showNotificationWithFullScreenIntent(
         .setContentTitle(title)
         .setContentText(description)
         .setPriority(NotificationCompat.PRIORITY_HIGH)
+        .setCategory(NotificationCompat.CATEGORY_ALARM)
         .setFullScreenIntent(
             getFullScreenIntent(
                 alarmID = alarmID,
@@ -40,7 +40,7 @@ fun Context.showNotificationWithFullScreenIntent(
     with(notificationManager) {
         buildNotificationChannel()
         val notification = notificationBuilder.build()
-        notify(0, notification)
+        notify(alarmID.hashCode(), notification)
     }
 }
 
@@ -55,8 +55,8 @@ private fun Context.getFullScreenIntent(
         putExtra("alarmTime", alarmTime)
     }
     return PendingIntent.getActivity(
-        this, 0, intent,
-        PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+        this, alarmID.hashCode(), intent,
+        PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
     )
 }
 

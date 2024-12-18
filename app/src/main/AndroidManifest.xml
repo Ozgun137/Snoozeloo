@@ -21,7 +21,10 @@
         <activity
             android:name=".presentation.triggerAlarm.TriggerAlarmActivity"
             android:exported="true"
-            android:theme="@style/Theme.App.Starting" />
+            android:theme="@style/Theme.App.Starting"
+            android:launchMode="singleTop"
+            android:showWhenLocked="true"
+            android:turnScreenOn="true"/>
         <activity
             android:name=".MainActivity"
             android:exported="true"
