@@ -1,4 +1,12 @@
 # Snoozeloo
+## **About the App**
+Snoozeloo is an intuitive and modern alarm application designed to simplify managing alarms. With an elegant user interface and robust functionality, Snoozeloo helps users manage their time efficiently.
+
+## **Technologies Used**
+- Jetpack Compose, Coroutines, Flow, Hilt, Jetpack Navigation, Android Alarm Manager, Broadcast Receiver, Full Screen Intent
+
+
+## **Screenshots**
 <table>
   <tr>
     <td style="text-align: center;">
@@ -23,3 +31,4 @@
     </td>
   </tr>
 </table>
+
